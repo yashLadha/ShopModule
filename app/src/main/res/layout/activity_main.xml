@@ -34,6 +34,7 @@
         android:layout_marginBottom="0dp">
 
         <FrameLayout
+            android:background="@drawable/orange_material"
             android:id="@+id/content_frame"
             android:clipToPadding="false"
             android:elevation="8dp"
