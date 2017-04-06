@@ -1,7 +1,10 @@
 package com.yashladha.shop.module;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -47,6 +52,13 @@ public class Register extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            Uri selectedImage = data.getData();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,9 +73,19 @@ public class Register extends Fragment {
         final EditText email = (EditText) v.findViewById(R.id.et_email);
         final EditText password = (EditText) v.findViewById(R.id.et_password);
         final EditText shopDescription = (EditText) v.findViewById(R.id.et_description);
-        RadioButton images_checked = (RadioButton) v.findViewById(R.id.image_selected);
+        final RadioButton images_checked = (RadioButton) v.findViewById(R.id.image_selected);
 
         images_checked.setEnabled(false); // enabled only when user selects some images
+
+        Button imagePicker = (Button) v.findViewById(R.id.register_image_chooser);
+        imagePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto, 1);
+                images_checked.setChecked(true);
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
         checkUser();
