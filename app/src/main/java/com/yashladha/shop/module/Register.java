@@ -80,15 +80,17 @@ public class Register extends Fragment {
                 String pwd = password.getText().toString();
                 String description = shopDescription.getText().toString();
 
-                Shop shop = new Shop(fName, lName, email_u, sName, pwd, description);
+                final Shop shop = new Shop(fName, lName, email_u, sName, pwd, description);
                 mAuth.createUserWithEmailAndPassword(email_u, pwd)
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 Log.d(LOG_TAG, "createUserWithEmailAndPassword: " + task.isSuccessful());
                                 if (task.isSuccessful()) {
-                                    Log.d(LOG_TAG, "User registered: " + mAuth.getCurrentUser().getUid());
+                                    String uid = mAuth.getCurrentUser().getUid();
+                                    Log.d(LOG_TAG, "User registered: " + uid);
                                     Toast.makeText(getContext(), "Register Successful", Toast.LENGTH_SHORT).show();
+                                    database_create(shop, uid);
                                     status = true;
                                     // TODO : go back to previous fragment
                                 } else {
@@ -97,18 +99,15 @@ public class Register extends Fragment {
                                 }
                             }
                         });
-
-                database_create(shop);
             }
         });
         return v;
     }
 
-    private void database_create(Shop shop) {
+    private void database_create(Shop shop, String uid) {
         if (status) {
             DatabaseReference database = FirebaseDatabase.getInstance().getReference();
             DatabaseReference mUserRef = database.child("users");
-            String uid = mAuth.getCurrentUser().getUid();
             Log.d(LOG_TAG, "creating database of user: " + uid);
             DatabaseReference userRef = mUserRef.child(uid);
             userRef.setValue(shop);
@@ -121,11 +120,7 @@ public class Register extends Fragment {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    status = true;
-                } else {
-                    status = false;
-                }
+                status = user != null;
             }
         };
     }

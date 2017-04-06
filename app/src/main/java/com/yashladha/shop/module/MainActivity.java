@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.syncState();
     }
 
+    // Exit prompt dialog box
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
