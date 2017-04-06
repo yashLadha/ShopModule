@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ShopModule</string>
+    <string-array name="Shop_Module">
+        <item>Registration</item>
+        <item>Sign In</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
