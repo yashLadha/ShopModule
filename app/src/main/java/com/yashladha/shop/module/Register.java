@@ -143,26 +143,30 @@ public class Register extends Fragment {
                 String description = shopDescription.getText().toString();
 
                 final Shop shop = new Shop(fName, lName, email_u, sName, pwd, description);
-                mAuth.createUserWithEmailAndPassword(email_u, pwd)
-                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                Log.d(LOG_TAG, "createUserWithEmailAndPassword: " + task.isSuccessful());
-                                if (task.isSuccessful()) {
-                                    String uid = mAuth.getCurrentUser().getUid();
-                                    Log.d(LOG_TAG, "User registered: " + uid);
-                                    Toast.makeText(getContext(), "Register Successful", Toast.LENGTH_SHORT).show();
-                                    database_create(shop, uid);
-                                    uploadData(getContext(), shop);
-                                    status = true;
-                                    // TODO : go back to previous fragment
-                                } else {
-                                    // For debugging purpose
+                if (email_u.length() == 0 || pwd.length() == 0) {
+                    Toast.makeText(getContext(), "Email or password field is empty", Toast.LENGTH_SHORT).show();
+                } else {
+                    mAuth.createUserWithEmailAndPassword(email_u, pwd)
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Log.d(LOG_TAG, "createUserWithEmailAndPassword: " + task.isSuccessful());
+                                    if (task.isSuccessful()) {
+                                        String uid = mAuth.getCurrentUser().getUid();
+                                        Log.d(LOG_TAG, "User registered: " + uid);
+                                        Toast.makeText(getContext(), "Register Successful", Toast.LENGTH_SHORT).show();
+                                        database_create(shop, uid);
+                                        uploadData(getContext(), shop);
+                                        status = true;
+                                        // TODO : go back to previous fragment
+                                    } else {
+                                        // For debugging purpose
 //                                    Log.d(LOG_TAG, String.valueOf(task.getResult()));
-                                    Toast.makeText(getContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
             }
         });
         return v;

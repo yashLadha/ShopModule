@@ -75,20 +75,28 @@ public class login extends Fragment {
                 String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
 
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                Log.d(LOG_TAG, "signInWithEmailAndPassword: " + task.isSuccessful());
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                                    status = true;
-                                } else {
-                                    Toast.makeText(getContext(), "Login Failed", Toast.LENGTH_SHORT).show();
-                                    status = false;
+                if (email.length() > 0 && password.length() > 0) {
+                    mAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Log.d(LOG_TAG, "signInWithEmailAndPassword: " + task.isSuccessful());
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                                        status = true;
+                                        Fragment transitionFragment = new user();
+                                        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                        fragmentTransaction.replace(R.id.content_frame, transitionFragment).setTransition(R.transition.slide_anim);
+                                        fragmentTransaction.commit();
+                                    } else {
+                                        Toast.makeText(getContext(), "Login Failed", Toast.LENGTH_SHORT).show();
+                                        status = false;
+                                    }
                                 }
-                            }
-                        });
+                            });
+                } else {
+                    Toast.makeText(getContext(), "Email and Password are not valid", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         return v;
@@ -99,11 +107,7 @@ public class login extends Fragment {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    status = true;
-                } else {
-                    status = false;
-                }
+                status = user != null;
             }
         };
     }
