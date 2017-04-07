@@ -157,7 +157,8 @@ public class Register extends Fragment {
                                     status = true;
                                     // TODO : go back to previous fragment
                                 } else {
-                                    Log.d(LOG_TAG, String.valueOf(task.getResult()));
+                                    // For debugging purpose
+//                                    Log.d(LOG_TAG, String.valueOf(task.getResult()));
                                     Toast.makeText(getContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
                                 }
                             }
