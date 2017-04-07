@@ -120,7 +120,7 @@
 
                 <Button
                     android:id="@+id/register_image_chooser"
-                    android:text="Choose Images of Shop"
+                    android:text="Choose Image of Shop"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:textColor="@color/colorPrimaryDark"
                     android:elevation="7dp"
@@ -128,6 +128,12 @@
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/shop_image"
+                android:elevation="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/bt_register"

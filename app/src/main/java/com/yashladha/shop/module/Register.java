@@ -1,7 +1,10 @@
 package com.yashladha.shop.module;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -23,6 +27,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -35,6 +41,7 @@ public class Register extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String LOG_TAG = getClass().getSimpleName();
     private boolean status;
+    private boolean images_set;
 
     @Override
     public void onStart() {
@@ -57,7 +64,41 @@ public class Register extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
+            Bitmap imageBitmap = null;
+            try {
+                imageBitmap = MediaStore.Images.Media.getBitmap(this.getActivity().getContentResolver(), selectedImage);
+                ImageView imageView = (ImageView) getActivity().findViewById(R.id.shop_image);
+                imageView.setImageURI(selectedImage);
+                imageView.setRotation(270);
+                RadioButton image_checker = (RadioButton) getActivity().findViewById(R.id.image_selected);
+                image_checker.setChecked(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Log.d(LOG_TAG, getRealPathFromURI(getContext(), selectedImage));
         }
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String proj[] = {MediaStore.Images.Media.DATA};
+            cursor = getContext().getContentResolver().query(contentUri, proj, null, null, null);
+            int columnIndex = 0;
+            if (cursor != null) {
+                columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                return cursor.getString(columnIndex);
+            } else {
+                Toast.makeText(getContext(), "No Images in Database", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return "No Path Found";
     }
 
     @Override
@@ -83,7 +124,6 @@ public class Register extends Fragment {
             public void onClick(View v) {
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(pickPhoto, 1);
-                images_checked.setChecked(true);
             }
         });
 
