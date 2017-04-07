@@ -42,6 +42,7 @@ public class Register extends Fragment {
     private String LOG_TAG = getClass().getSimpleName();
     private boolean status;
     private boolean images_set;
+    private String userId;
 
     @Override
     public void onStart() {
@@ -69,7 +70,6 @@ public class Register extends Fragment {
                 imageBitmap = MediaStore.Images.Media.getBitmap(this.getActivity().getContentResolver(), selectedImage);
                 ImageView imageView = (ImageView) getActivity().findViewById(R.id.shop_image);
                 imageView.setImageURI(selectedImage);
-                imageView.setRotation(270);
                 RadioButton image_checker = (RadioButton) getActivity().findViewById(R.id.image_selected);
                 image_checker.setChecked(true);
             } catch (IOException e) {
@@ -153,6 +153,7 @@ public class Register extends Fragment {
                                     Log.d(LOG_TAG, "User registered: " + uid);
                                     Toast.makeText(getContext(), "Register Successful", Toast.LENGTH_SHORT).show();
                                     database_create(shop, uid);
+                                    uploadData(getContext(), shop);
                                     status = true;
                                     // TODO : go back to previous fragment
                                 } else {
@@ -166,8 +167,16 @@ public class Register extends Fragment {
         return v;
     }
 
+    // Uses Firebase Storage Options
+    private boolean uploadData(Context context, Shop shopObj) {
+        boolean uploadFlag = false;
+        Log.d(LOG_TAG, "User registered is: " + mAuth.getCurrentUser().getUid());
+        return uploadFlag;
+    }
+
     private void database_create(Shop shop, String uid) {
         if (status) {
+            userId = uid;
             DatabaseReference database = FirebaseDatabase.getInstance().getReference();
             DatabaseReference mUserRef = database.child("users");
             Log.d(LOG_TAG, "creating database of user: " + uid);
