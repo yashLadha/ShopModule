@@ -58,6 +58,7 @@ public class login extends Fragment {
         final EditText etPassword = (EditText) v.findViewById(R.id.et_login_password);
 
         Button register = (Button) v.findViewById(R.id.bt_login_register);
+        // Button to register
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +70,7 @@ public class login extends Fragment {
         });
 
         Button Login = (Button) v.findViewById(R.id.bt_login);
+        // Button for login
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
