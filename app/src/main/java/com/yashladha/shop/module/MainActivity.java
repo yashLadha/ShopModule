@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (intentFragment != null) {
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.content_frame, intentFragment).setTransition(R.transition.slide_anim);
+                    transaction.replace(R.id.content_frame, intentFragment);
                     transaction.commit();
                 }
                 navigationView.setCheckedItem(id);

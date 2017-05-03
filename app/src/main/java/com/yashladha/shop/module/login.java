@@ -3,6 +3,7 @@ package com.yashladha.shop.module;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -64,7 +65,7 @@ public class login extends Fragment {
             public void onClick(View v) {
                 Fragment intentFragment = new Register();
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.content_frame, intentFragment).setTransition(R.transition.slide_anim);
+                fragmentTransaction.replace(R.id.content_frame, intentFragment);
                 fragmentTransaction.commit();
             }
         });
@@ -85,10 +86,12 @@ public class login extends Fragment {
                                     Log.d(LOG_TAG, "signInWithEmailAndPassword: " + task.isSuccessful());
                                     if (task.isSuccessful()) {
                                         Toast.makeText(getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                                        Log.d(LOG_TAG, "Login Successful");
+
                                         status = true;
                                         Fragment transitionFragment = new user();
                                         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                        fragmentTransaction.replace(R.id.content_frame, transitionFragment).setTransition(R.transition.slide_anim);
+                                        fragmentTransaction.replace(R.id.content_frame, transitionFragment);
                                         fragmentTransaction.commit();
                                     } else {
                                         Toast.makeText(getContext(), "Login Failed", Toast.LENGTH_SHORT).show();

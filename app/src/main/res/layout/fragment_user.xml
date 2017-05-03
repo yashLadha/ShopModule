@@ -5,9 +5,28 @@
     tools:context="com.yashladha.shop.module.user">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/user_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <RadioButton
+                android:id="@+id/rbtFlagMultiImage"
+                android:clickable="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/btMultiImagePicker"
+                android:layout_width="match_parent"
+                android:textStyle="normal"
+                android:textSize="18sp"
+                android:text="Select 3 Images of the Shop"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
 </FrameLayout>

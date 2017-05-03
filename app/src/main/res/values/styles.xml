@@ -10,6 +10,9 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:fragmentEnterTransition">@transition/slide_anim</item>
         <item name="android:fragmentExitTransition">@transition/slide_anim</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>
