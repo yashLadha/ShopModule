@@ -2,6 +2,8 @@ package com.yashladha.shop.module;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -41,6 +44,9 @@ public class user extends Fragment {
 
     private Button multiImagePicker;
     private RadioButton flagMultiImage;
+    private EditText addressShop;
+    private Button submitButton;
+    private Button cateogryButton;
 
     private String uid;
 
@@ -68,6 +74,28 @@ public class user extends Fragment {
 
         multiImagePicker = (Button) v.findViewById(R.id.btMultiImagePicker);
         flagMultiImage = (RadioButton) v.findViewById(R.id.rbtFlagMultiImage);
+        addressShop = (EditText) v.findViewById(R.id.etAddressShop);
+        submitButton = (Button) v.findViewById(R.id.btSubmitExtraInfo);
+        cateogryButton = (Button) v.findViewById(R.id.btCateogry);
+
+        cateogryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final CharSequence cateogries[] = new CharSequence[] {
+                        "Eating", "Clothing", "Shopping", "Fun", "Other"
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Pick a cateogry");
+                builder.setItems(cateogries, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getContext(), "Cateogry Selected: " + cateogries[which], Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.show();
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
         boolean status = checkUser();
@@ -117,13 +145,11 @@ public class user extends Fragment {
 
     private void getImages() {
 
+        // Config for the Multiple Image Selector library
         Config config = new Config();
-
         config.setSelectionMin(2);
         config.setSelectionLimit(4);
-
         ImagePickerActivity.setConfig(config);
-
 
         Intent intent  = new Intent(getContext(), ImagePickerActivity.class);
         startActivityForResult(intent,INTENT_REQUEST_GET_IMAGES);
