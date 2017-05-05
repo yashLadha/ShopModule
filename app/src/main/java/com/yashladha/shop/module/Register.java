@@ -21,14 +21,22 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -36,13 +44,17 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressWarnings("VisibleForTests")
 public class Register extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String LOG_TAG = getClass().getSimpleName();
     private boolean status;
     private boolean images_set;
+    private Uri imageDefault;
     private String userId;
+    Bitmap imageBitmap = null;
+    private FirebaseStorage storage;
 
     @Override
     public void onStart() {
@@ -64,8 +76,8 @@ public class Register extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
+            Log.d(LOG_TAG, "ContentUri Image: " + data.getData());
             Uri selectedImage = data.getData();
-            Bitmap imageBitmap = null;
             try {
                 imageBitmap = MediaStore.Images.Media.getBitmap(this.getActivity().getContentResolver(), selectedImage);
                 ImageView imageView = (ImageView) getActivity().findViewById(R.id.shop_image);
@@ -75,7 +87,8 @@ public class Register extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Log.d(LOG_TAG, getRealPathFromURI(getContext(), selectedImage));
+            Log.d(LOG_TAG, "Image Path: " + getRealPathFromURI(getContext(), selectedImage));
+            imageDefault = Uri.fromFile(new File(getRealPathFromURI(getContext(), selectedImage)));
         }
     }
 
@@ -128,6 +141,7 @@ public class Register extends Fragment {
         });
 
         mAuth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
         checkUser();
         if (status) {
             Log.d(LOG_TAG, "User Logged in: ");
@@ -143,26 +157,31 @@ public class Register extends Fragment {
                 String description = shopDescription.getText().toString();
 
                 final Shop shop = new Shop(fName, lName, email_u, sName, pwd, description);
-                mAuth.createUserWithEmailAndPassword(email_u, pwd)
-                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                Log.d(LOG_TAG, "createUserWithEmailAndPassword: " + task.isSuccessful());
-                                if (task.isSuccessful()) {
-                                    String uid = mAuth.getCurrentUser().getUid();
-                                    Log.d(LOG_TAG, "User registered: " + uid);
-                                    Toast.makeText(getContext(), "Register Successful", Toast.LENGTH_SHORT).show();
-                                    database_create(shop, uid);
-                                    uploadData(getContext(), shop);
-                                    status = true;
-                                    // TODO : go back to previous fragment
-                                } else {
-                                    // For debugging purpose
-//                                    Log.d(LOG_TAG, String.valueOf(task.getResult()));
-                                    Toast.makeText(getContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
+                if (email_u.length() == 0 || pwd.length() == 0) {
+                    Toast.makeText(getContext(), "Email or password field is empty", Toast.LENGTH_SHORT).show();
+                } else {
+                    mAuth.createUserWithEmailAndPassword(email_u, pwd)
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Log.d(LOG_TAG, "createUserWithEmailAndPassword: " + task.isSuccessful());
+                                    if (task.isSuccessful()) {
+                                        String uid = mAuth.getCurrentUser().getUid();
+                                        Log.d(LOG_TAG, "User registered: " + uid);
+                                        Toast.makeText(getContext(), "Register Successful", Toast.LENGTH_SHORT).show();
+                                        database_create(shop, uid);
+                                        if (uploadData(getContext(), shop))
+                                            Log.d(LOG_TAG, "Data Uploaded Successfully");
+                                        else
+                                            Log.d(LOG_TAG, "Data not uploaded successfully");
+                                        status = true;
+                                        // TODO : go back to previous fragment
+                                    } else {
+                                        Toast.makeText(getContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
             }
         });
         return v;
@@ -171,8 +190,38 @@ public class Register extends Fragment {
     // Uses Firebase Storage Options
     private boolean uploadData(Context context, Shop shopObj) {
         boolean uploadFlag = false;
-        Log.d(LOG_TAG, "User registered is: " + mAuth.getCurrentUser().getUid());
+        if (status) {
+            String uid = mAuth.getCurrentUser().getUid();
+            Log.d(LOG_TAG, "User registered is(Upload Data): " + uid);
+            StorageReference storageRef = storage.getReference();
+            StorageReference userRef = storageRef.child(uid);
+            uploadFromFile(userRef);
+            uploadFlag = true;
+        }
         return uploadFlag;
+    }
+
+    private void uploadFromFile(StorageReference userRef) {
+        StorageReference userDefaultImage = userRef.child("default/def.jpg");
+        Log.d(LOG_TAG, "File name: " + imageDefault.getLastPathSegment());
+        UploadTask uploadTask = userDefaultImage.putFile(imageDefault);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(LOG_TAG, "Deafult Image cannot be uploaded succesfully");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                Toast.makeText(getContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void database_create(Shop shop, String uid) {

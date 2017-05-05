@@ -26,10 +26,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/edittext_bg"
-                android:fontFamily="cursive"
                 android:elevation="7dp"
+                android:fontFamily="cursive"
                 android:gravity="center"
                 android:hint="Email"
+                android:inputType="textEmailAddress"
                 android:padding="10dp"
                 android:textSize="22sp" />
 
@@ -61,7 +62,7 @@
         <Button
             android:id="@+id/bt_login_register"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryDark"
             android:layout_alignLeft="@+id/login_fragment_e1"

@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yashladha.shop.module.Register">
-
     <ScrollView
         android:background="#f7f0e1"
         android:layout_width="match_parent"

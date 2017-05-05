@@ -1,0 +1,107 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#ffee58"
+    android:layout_height="match_parent"
+    tools:context="com.yashladha.shop.module.user">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:layout_gravity="center"
+            android:id="@+id/user_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/rbtFlagMultiImage"
+                    android:clickable="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/btMultiImagePicker"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_height="wrap_content"
+                    android:text="Select 3 Images of the Shop"
+                    android:textSize="18sp"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btCateogry"
+                android:padding="8dp"
+                android:layout_margin="8dp"
+                android:elevation="7dp"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:text="Cateogry"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btZone"
+                android:padding="8dp"
+                android:layout_margin="8dp"
+                android:elevation="7dp"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:text="Zone"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/etAddressShop"
+                android:hint="Address"
+                android:gravity="center"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:elevation="7dp"
+                android:textSize="22sp"
+                android:fontFamily="cursive"
+                android:background="@drawable/edittext_bg"
+                android:maxHeight="180dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/etPhoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/edittext_bg"
+                android:elevation="7dp"
+                android:fontFamily="cursive"
+                android:gravity="center"
+                android:hint="Phone Number"
+                android:inputType="phone"
+                android:padding="8dp"
+                android:textSize="22sp" />
+
+
+            <Button
+                android:layout_gravity="center"
+                android:text="Submit"
+                android:id="@+id/btSubmitExtraInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </ScrollView>
+</FrameLayout>
