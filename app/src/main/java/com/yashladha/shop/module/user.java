@@ -5,35 +5,42 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressWarnings("VisibleForTests")
 public class user extends Fragment {
 
     private static final int INTENT_REQUEST_GET_IMAGES = 13;
@@ -41,14 +48,21 @@ public class user extends Fragment {
     private String LOG_TAG = getClass().getSimpleName();
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseStorage storage;
+    private FirebaseDatabase database;
 
     private Button multiImagePicker;
     private RadioButton flagMultiImage;
     private EditText addressShop;
     private Button submitButton;
     private Button cateogryButton;
+    private Button zoneButton;
+    private EditText phoneNumber;
+    private boolean status;
 
     private String uid;
+    private String shopCateogry;
+    private String shopZone;
 
     public user() {
         // Required empty public constructor
@@ -77,6 +91,8 @@ public class user extends Fragment {
         addressShop = (EditText) v.findViewById(R.id.etAddressShop);
         submitButton = (Button) v.findViewById(R.id.btSubmitExtraInfo);
         cateogryButton = (Button) v.findViewById(R.id.btCateogry);
+        zoneButton = (Button) v.findViewById(R.id.btZone);
+        phoneNumber = (EditText) v.findViewById(R.id.etPhoneNumber);
 
         cateogryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +107,27 @@ public class user extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getContext(), "Cateogry Selected: " + cateogries[which], Toast.LENGTH_SHORT).show();
+                        shopCateogry = (String) cateogries[which];
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        zoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final CharSequence zones[] = new CharSequence[] {
+                        "North", "East", "West", "South", "Center"
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Pick a Zone");
+                builder.setItems(zones, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getContext(), "Zone Selected: " + zones[which], Toast.LENGTH_SHORT).show();
+                        shopZone = (String) zones[which];
                     }
                 });
                 builder.show();
@@ -98,7 +135,9 @@ public class user extends Fragment {
         });
 
         mAuth = FirebaseAuth.getInstance();
-        boolean status = checkUser();
+        storage = FirebaseStorage.getInstance();
+        database = FirebaseDatabase.getInstance();
+        checkUser();
         if (status) {
             Log.d(LOG_TAG, "User exists: " + uid);
         } else {
@@ -112,7 +151,36 @@ public class user extends Fragment {
                 flagMultiImage.setChecked(true);
             }
         });
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadToDatabase();
+                Log.d(LOG_TAG, "Images and address data uploaded successfully");
+                Fragment transactionFragment = new ShopDetails();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.content_frame, transactionFragment);
+                transaction.commit();
+            }
+        });
         return v;
+    }
+
+    private void uploadToDatabase() {
+        DatabaseReference databaseRef = database.getReference();
+        String shopAddress = addressShop.getText().toString();
+        String phone = phoneNumber.getText().toString();
+        DatabaseReference userInfo = databaseRef.child("users").child(uid);
+        HashMap<String, Object> shopValue = new HashMap<>();
+        shopValue.put("Address", shopAddress);
+        shopValue.put("Phone Number", phone);
+        Log.d(LOG_TAG, "Key to Node: " + userInfo.push().getKey());
+        userInfo.updateChildren(shopValue).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(LOG_TAG, "Address and Phone Data Uploaded Successfully");
+            }
+        });
     }
 
     private boolean checkUser() {
@@ -125,6 +193,7 @@ public class user extends Fragment {
                     Log.d(LOG_TAG, "User logged in with uid: " + user.getUid());
                     uid = user.getUid();
                     flag[0] = true;
+                    status = true;
                 }
             }
         };
@@ -137,10 +206,40 @@ public class user extends Fragment {
         if (requestCode == INTENT_REQUEST_GET_IMAGES && resultCode == Activity.RESULT_OK ) {
 
             ArrayList<Uri>  image_uris = intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
-            for (int i = 0; i < image_uris.size(); i++) {
-                Toast.makeText(getContext(), image_uris.get(i).toString(), Toast.LENGTH_SHORT).show();
-            }
+            uploadImages(image_uris);
         }
+    }
+
+    private void uploadImages(ArrayList<Uri> image_uris) {
+        StorageReference storageRef = storage.getReference();
+        StorageReference userRef = storageRef.child(uid).child("ShopImages");
+        for (int i = 0; i < image_uris.size(); i++) {
+            uploadImage(i, image_uris.get(i), userRef);
+        }
+    }
+
+    private void uploadImage(int pos, Uri imageUri, StorageReference userRef) {
+        StorageReference shopImage = userRef.child(String.valueOf(pos) + "/" + String.valueOf(pos) + ".jpg");
+        Log.d(LOG_TAG, "Image Name: " + imageUri.getLastPathSegment());
+        final int val = pos;
+        UploadTask uploadTask = shopImage.putFile(imageUri);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(LOG_TAG, "Shop Image no: " + String.valueOf(val) + " Not Uploaded Successfully");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadUri = taskSnapshot.getDownloadUrl();
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                Toast.makeText(getContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void getImages() {
