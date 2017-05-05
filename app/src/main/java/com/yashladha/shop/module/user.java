@@ -19,8 +19,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +34,7 @@ import com.google.firebase.storage.UploadTask;
 import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -173,7 +176,9 @@ public class user extends Fragment {
         DatabaseReference userInfo = databaseRef.child("users").child(uid);
         HashMap<String, Object> shopValue = new HashMap<>();
         shopValue.put("Address", shopAddress);
-        shopValue.put("Phone Number", phone);
+        shopValue.put("Cateogry", shopCateogry);
+        shopValue.put("Zone", shopZone);
+        shopValue.put("phoneNumber", phone);
         Log.d(LOG_TAG, "Key to Node: " + userInfo.push().getKey());
         userInfo.updateChildren(shopValue).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -222,6 +227,8 @@ public class user extends Fragment {
         StorageReference shopImage = userRef.child(String.valueOf(pos) + "/" + String.valueOf(pos) + ".jpg");
         Log.d(LOG_TAG, "Image Name: " + imageUri.getLastPathSegment());
         final int val = pos;
+        imageUri = Uri.fromFile(new File(imageUri.toString()));
+        Log.d(LOG_TAG, "Image Uri: " + pos + " " + imageUri.toString());
         UploadTask uploadTask = shopImage.putFile(imageUri);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
@@ -232,12 +239,19 @@ public class user extends Fragment {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Uri downloadUri = taskSnapshot.getDownloadUrl();
+                Log.d(LOG_TAG, "Uploaded Successfully");
+                Toast.makeText(getContext(), "Uploaded Successfully", Toast.LENGTH_SHORT).show();
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                 Toast.makeText(getContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                Log.d(LOG_TAG, "Task Completed");
             }
         });
     }

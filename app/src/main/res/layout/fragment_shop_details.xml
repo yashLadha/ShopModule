@@ -5,9 +5,195 @@
     tools:context="com.yashladha.shop.module.ShopDetails">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
+        android:background="#ffee58"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_margin="3dp"
+                android:weightSum="3"
+                android:layout_width="match_parent"
+                android:layout_height="110dp">
+
+                <ImageView
+                    tools:src="@mipmap/ic_launcher"
+                    android:id="@+id/ivDefaultImage"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp" />
+
+                <TextView
+                    android:id="@+id/tvUserName"
+                    android:layout_margin="4dp"
+                    tools:text="ShopUser Name"
+                    android:gravity="center"
+                    android:fontFamily="cursive"
+                    android:textStyle="bold"
+                    android:textSize="22sp"
+                    android:layout_weight="2"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvEmailUSer"
+                android:layout_margin="4dp"
+                android:padding="6dp"
+                tools:text="xyz@gmail.com"
+                android:textSize="22sp"
+                android:textColor="@android:color/black"
+                android:gravity="left"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvShopName"
+                android:layout_margin="4dp"
+                android:padding="6dp"
+                tools:text="Shop Name"
+                android:textSize="22sp"
+                android:textColor="@android:color/black"
+                android:gravity="left"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_margin="4dp"
+                android:weightSum="3"
+                android:padding="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="110dp">
+
+                <ImageView
+                    tools:src="@mipmap/ic_launcher"
+                    android:id="@+id/ivImage0"
+                    android:layout_weight="1"
+                    android:padding="6dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp" />
+
+                <ImageView
+                    tools:src="@mipmap/ic_launcher"
+                    android:id="@+id/ivImage1"
+                    android:layout_weight="1"
+                    android:padding="6dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp" />
+
+                <ImageView
+                    tools:src="@mipmap/ic_launcher"
+                    android:id="@+id/ivImage2"
+                    android:layout_weight="1"
+                    android:padding="6dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:background="@drawable/edittext_bg"
+                android:layout_margin="4dp"
+                tools:text="Information about the description of the Shop"
+                android:textSize="18sp"
+                android:fontFamily="serif"
+                android:padding="6dp"
+                android:id="@+id/tvShopDescription"
+                android:gravity="fill"
+                android:elevation="8dp"
+                android:maxHeight="180dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_margin="4dp"
+                android:weightSum="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:background="@drawable/edittext_bg"
+                    android:layout_margin="4dp"
+                    tools:text="Address"
+                    android:textSize="18sp"
+                    android:fontFamily="serif"
+                    android:padding="6dp"
+                    android:id="@+id/tvAddress"
+                    android:gravity="fill"
+                    android:elevation="8dp"
+                    android:maxHeight="180dp"
+                    android:layout_weight="1.5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:background="@drawable/edittext_bg"
+                    android:layout_margin="4dp"
+                    tools:text="Phone"
+                    android:textSize="18sp"
+                    android:fontFamily="serif"
+                    android:padding="6dp"
+                    android:id="@+id/tvPhone"
+                    android:gravity="fill"
+                    android:elevation="8dp"
+                    android:layout_weight="1.5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_margin="4dp"
+                android:weightSum="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:background="@drawable/edittext_bg"
+                    android:layout_margin="4dp"
+                    tools:text="Cateogry"
+                    android:textSize="18sp"
+                    android:fontFamily="serif"
+                    android:padding="6dp"
+                    android:id="@+id/tvCateogry"
+                    android:gravity="fill"
+                    android:elevation="8dp"
+                    android:maxHeight="180dp"
+                    android:layout_weight="1.5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:background="@drawable/edittext_bg"
+                    android:layout_margin="4dp"
+                    tools:text="Zone"
+                    android:textSize="18sp"
+                    android:fontFamily="serif"
+                    android:padding="6dp"
+                    android:id="@+id/tvZone"
+                    android:gravity="fill"
+                    android:elevation="8dp"
+                    android:layout_weight="1.5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>
