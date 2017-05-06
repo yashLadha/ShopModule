@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -61,6 +63,8 @@ public class user extends Fragment {
     private Button cateogryButton;
     private Button zoneButton;
     private EditText phoneNumber;
+    private ContentLoadingProgressBar progressBar;
+    private LinearLayout layout;
     private boolean status;
 
     private String uid;
@@ -96,6 +100,9 @@ public class user extends Fragment {
         cateogryButton = (Button) v.findViewById(R.id.btCateogry);
         zoneButton = (Button) v.findViewById(R.id.btZone);
         phoneNumber = (EditText) v.findViewById(R.id.etPhoneNumber);
+        progressBar = (ContentLoadingProgressBar) v.findViewById(R.id.progressBarMultiImage);
+        layout = (LinearLayout) v.findViewById(R.id.user_linear_layout);
+        progressBar.setVisibility(View.INVISIBLE);
 
         cateogryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,7 +158,6 @@ public class user extends Fragment {
             @Override
             public void onClick(View v) {
                 getImages();
-                flagMultiImage.setChecked(true);
             }
         });
 
@@ -185,6 +191,11 @@ public class user extends Fragment {
             public void onSuccess(Void aVoid) {
                 Log.d(LOG_TAG, "Address and Phone Data Uploaded Successfully");
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(LOG_TAG, "Phone and Address data not uploaded successfully");
+            }
         });
     }
 
@@ -211,7 +222,12 @@ public class user extends Fragment {
         if (requestCode == INTENT_REQUEST_GET_IMAGES && resultCode == Activity.RESULT_OK ) {
 
             ArrayList<Uri>  image_uris = intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
+            progressBar.setVisibility(View.VISIBLE);
+            layout.setVisibility(View.INVISIBLE);
             uploadImages(image_uris);
+            layout.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            flagMultiImage.setChecked(true);
         }
     }
 

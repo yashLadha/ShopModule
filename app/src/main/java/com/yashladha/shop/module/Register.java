@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -55,6 +57,8 @@ public class Register extends Fragment {
     private String userId;
     Bitmap imageBitmap = null;
     private FirebaseStorage storage;
+    private ProgressBar progressBar;
+    private LinearLayout layout;
 
     @Override
     public void onStart() {
@@ -128,6 +132,8 @@ public class Register extends Fragment {
         final EditText password = (EditText) v.findViewById(R.id.et_password);
         final EditText shopDescription = (EditText) v.findViewById(R.id.et_description);
         final RadioButton images_checked = (RadioButton) v.findViewById(R.id.image_selected);
+        layout = (LinearLayout) v.findViewById(R.id.registerLinearLayout);
+        progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
 
         images_checked.setEnabled(false); // enabled only when user selects some images
 
@@ -195,6 +201,8 @@ public class Register extends Fragment {
             Log.d(LOG_TAG, "User registered is(Upload Data): " + uid);
             StorageReference storageRef = storage.getReference();
             StorageReference userRef = storageRef.child(uid);
+            progressBar.setVisibility(View.VISIBLE);
+            layout.setVisibility(View.INVISIBLE);
             uploadFromFile(userRef);
             uploadFlag = true;
         }
@@ -208,17 +216,20 @@ public class Register extends Fragment {
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(LOG_TAG, "Deafult Image cannot be uploaded succesfully");
+                Log.d(LOG_TAG, "Default Image cannot be uploaded succesfully");
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                layout.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                Log.d(LOG_TAG, "Upload is " + progress + "% done");
                 Toast.makeText(getContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
             }
         });

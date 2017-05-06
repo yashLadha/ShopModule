@@ -4,147 +4,163 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yashladha.shop.module.Register">
-    <ScrollView
-        android:background="#f7f0e1"
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:visibility="invisible"
+            android:foregroundGravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ScrollView
+            android:background="#f7f0e1"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <EditText
-                android:id="@+id/et_first_name"
-                android:hint="First Name"
-                android:layout_margin="8dp"
-                android:elevation="7dp"
-                android:textStyle="normal"
-                android:maxLines="1"
-                android:fontFamily="cursive"
-                android:textSize="22sp"
-                android:gravity="center"
-                android:padding="10dp"
-                android:background="@drawable/edittext_bg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/et_last_name"
-                android:hint="Last Name"
-                android:layout_margin="8dp"
-                android:elevation="7dp"
-                android:maxLines="1"
-                android:textStyle="normal"
-                android:fontFamily="cursive"
-                android:textSize="22sp"
-                android:gravity="center"
-                android:padding="10dp"
-                android:background="@drawable/edittext_bg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/et_shop_name"
-                android:hint="Shop Name"
-                android:layout_margin="8dp"
-                android:elevation="7dp"
-                android:maxLines="1"
-                android:textStyle="normal"
-                android:fontFamily="cursive"
-                android:textSize="22sp"
-                android:gravity="center"
-                android:padding="10dp"
-                android:background="@drawable/edittext_bg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/et_email"
-                android:hint="Email"
-                android:layout_margin="8dp"
-                android:elevation="7dp"
-                android:maxLines="1"
-                android:textStyle="normal"
-                android:fontFamily="cursive"
-                android:textSize="22sp"
-                android:gravity="center"
-                android:inputType="textEmailAddress"
-                android:padding="10dp"
-                android:background="@drawable/edittext_bg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/et_password"
-                android:hint="Password"
-                android:layout_margin="8dp"
-                android:elevation="7dp"
-                android:maxLines="1"
-                android:textStyle="normal"
-                android:fontFamily="cursive"
-                android:textSize="22sp"
-                android:gravity="center"
-                android:inputType="textPassword"
-                android:padding="10dp"
-                android:background="@drawable/edittext_bg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <EditText
-                android:id="@+id/et_description"
-                android:hint="Shop Description"
-                android:layout_margin="8dp"
-                android:elevation="7dp"
-                android:textStyle="normal"
-                android:fontFamily="cursive"
-                android:textSize="22sp"
-                android:maxLines="8"
-                android:gravity="center"
-                android:padding="10dp"
-                android:background="@drawable/edittext_bg"
-                android:layout_width="match_parent"
-                android:maxHeight="180dp"
-                android:layout_height="wrap_content" />
 
             <LinearLayout
-                android:orientation="horizontal"
+                android:id="@+id/registerLinearLayout"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
-                <RadioButton
-                    android:id="@+id/image_selected"
+                <EditText
+                    android:id="@+id/et_first_name"
+                    android:hint="First Name"
+                    android:layout_margin="8dp"
                     android:elevation="7dp"
-                    android:layout_width="wrap_content"
+                    android:textStyle="normal"
+                    android:maxLines="1"
+                    android:fontFamily="cursive"
+                    android:textSize="22sp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:background="@drawable/edittext_bg"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <Button
-                    android:id="@+id/register_image_chooser"
-                    android:text="Choose Image of Shop"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:textColor="@color/colorPrimaryDark"
+                <EditText
+                    android:id="@+id/et_last_name"
+                    android:hint="Last Name"
+                    android:layout_margin="8dp"
+                    android:elevation="7dp"
+                    android:maxLines="1"
+                    android:textStyle="normal"
+                    android:fontFamily="cursive"
+                    android:textSize="22sp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:background="@drawable/edittext_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/et_shop_name"
+                    android:hint="Shop Name"
+                    android:layout_margin="8dp"
+                    android:elevation="7dp"
+                    android:maxLines="1"
+                    android:textStyle="normal"
+                    android:fontFamily="cursive"
+                    android:textSize="22sp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:background="@drawable/edittext_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/et_email"
+                    android:hint="Email"
+                    android:layout_margin="8dp"
+                    android:elevation="7dp"
+                    android:maxLines="1"
+                    android:textStyle="normal"
+                    android:fontFamily="cursive"
+                    android:textSize="22sp"
+                    android:gravity="center"
+                    android:inputType="textEmailAddress"
+                    android:padding="10dp"
+                    android:background="@drawable/edittext_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/et_password"
+                    android:hint="Password"
+                    android:layout_margin="8dp"
+                    android:elevation="7dp"
+                    android:maxLines="1"
+                    android:textStyle="normal"
+                    android:fontFamily="cursive"
+                    android:textSize="22sp"
+                    android:gravity="center"
+                    android:inputType="textPassword"
+                    android:padding="10dp"
+                    android:background="@drawable/edittext_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/et_description"
+                    android:hint="Shop Description"
+                    android:layout_margin="8dp"
+                    android:elevation="7dp"
+                    android:textStyle="normal"
+                    android:fontFamily="cursive"
+                    android:textSize="22sp"
+                    android:maxLines="8"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:background="@drawable/edittext_bg"
+                    android:layout_width="match_parent"
+                    android:maxHeight="180dp"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:id="@+id/image_selected"
+                        android:elevation="7dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:id="@+id/register_image_chooser"
+                        android:text="Choose Image of Shop User"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:elevation="7dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/shop_image"
                     android:elevation="7dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <Button
+                    android:id="@+id/bt_register"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="7dp"
+                    android:text="Register" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/shop_image"
-                android:elevation="7dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        </ScrollView>
 
-            <Button
-                android:id="@+id/bt_register"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:textColor="@color/colorPrimaryDark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:elevation="7dp"
-                android:text="Register" />
-        </LinearLayout>
 
-    </ScrollView>
-    <!-- TODO: Update blank fragment layout -->
+    </RelativeLayout>
 
 </FrameLayout>
