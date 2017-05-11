@@ -10,9 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.ContentLoadingProgressBar
+        <ProgressBar
             android:id="@+id/progressBarMultiImage"
             android:visibility="invisible"
+            android:foregroundGravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -92,16 +93,16 @@
 
                 <EditText
                     android:id="@+id/etPhoneNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:padding="8dp"
                     android:layout_margin="8dp"
-                    android:background="@drawable/edittext_bg"
+                    android:inputType="phone"
                     android:elevation="7dp"
                     android:fontFamily="cursive"
+                    android:background="@drawable/edittext_bg"
                     android:gravity="center"
                     android:hint="Phone Number"
-                    android:inputType="phone"
-                    android:padding="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:textSize="22sp" />
 
 

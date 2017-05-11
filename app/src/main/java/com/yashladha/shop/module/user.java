@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -63,7 +64,7 @@ public class user extends Fragment {
     private Button cateogryButton;
     private Button zoneButton;
     private EditText phoneNumber;
-    private ContentLoadingProgressBar progressBar;
+    private ProgressBar progressBar;
     private LinearLayout layout;
     private boolean status;
 
@@ -100,7 +101,7 @@ public class user extends Fragment {
         cateogryButton = (Button) v.findViewById(R.id.btCateogry);
         zoneButton = (Button) v.findViewById(R.id.btZone);
         phoneNumber = (EditText) v.findViewById(R.id.etPhoneNumber);
-        progressBar = (ContentLoadingProgressBar) v.findViewById(R.id.progressBarMultiImage);
+        progressBar = (ProgressBar) v.findViewById(R.id.progressBarMultiImage);
         layout = (LinearLayout) v.findViewById(R.id.user_linear_layout);
         progressBar.setVisibility(View.INVISIBLE);
 
